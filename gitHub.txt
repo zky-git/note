@@ -1,0 +1,100 @@
+﻿git 问题总结
+	
+	1.忽略不要上传的文件
+		输入vim .gitignore命令，打开文件（没有文件会自动创建）；
+		按i键切换到编辑状态，输入规则，例如node_modules/，然后按Esc键退出编辑，输入:wq保存退出。
+
+		过滤规则：
+
+		node_modules/   表示过滤这个文件夹
+		*.zip   过滤zip后缀文件
+		demo.html   过滤该文件
+		
+	2.关联远程仓库 	
+		要关联一个远程库，使用命令git remote add origin git@BIGZKY:path/repo-name.git；
+		关联后，使用命令git push -u origin master第一次推送master分支的所有内容；
+		此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
+	
+	3.出现远程库上github中的README.md文件不在本地代码目录中	
+		To git@github.com:yangchao0718/cocos2d.git
+ 		! [rejected]        master -> master (non-fast-forward)
+		error: failed to push some refs to 'git@github.com:yangchao0718/cocos2d.git
+		
+		解决方法：
+			git pull --rebase origin master
+			
+	
+	
+	4.创建SSH密钥
+		ssh-keygen -t rsa -C "your_email@example.com"
+
+		$ ssh-keygen -t rsa -C "git@github.com:BIGZKY/note.git” -f ~/.ssh/github_rsa
+
+		-t 指定密钥类型，默认是 rsa ，可以省略。
+		-C 设置注释文字，比如邮箱。
+		-f 指定密钥文件存储文件名。
+
+		添加私钥
+			ssh-add ~/.ssh/github_rsa
+			如果执行ssh-add时提示”Could not open a connection to your authentication agent”  可以先执行 ssh-agent bash  再运行 ssh-add ~/.ssh/github_rsa
+		 
+		 	ssh-add -l 来确私钥列表
+			ssh-add -D 来清空私钥列表
+
+		修改config配置文件 
+			若.ssh目录(就是私钥所在的文件夹)下无config文件，那么创建 touch config
+
+			# gitlab
+				Host github.com
+				Port 22
+				HostName github.com
+				PreferredAuthentications publickey
+				IdentityFile C:/Users/xiaohaozi/.ssh/github-rsa
+				User xiaohaozi
+
+			# 配置文件参数
+				# Host : Host可以看作是一个你要识别的模式，对识别的模式，进行配置对应的的主机名和ssh文件
+				# HostName : 要登录主机的主机名
+				# User : 登录名
+				# IdentityFile : 指明上面User对应的identityFile路径
+
+			#github
+				Host github.com
+				HostName github.com
+				PreferredAuthentications publickey
+				IdentityFile C:/Users/Administrator/.ssh/id_sra
+				User BIGZKY
+
+			使用 ssh -T git@github.com 测试是否成功
+
+		复制SSH Key
+			1.使用命令	$ clip < ~/.ssh/id_rsa.pub
+			2./c/Users/Administrator  从文件直接复制
+	
+	5.合并分支
+	
+		git merge --no-ff -m "merged bug fix 001" issue-001
+
+	6.查看分支合并图
+		git log --graph --pretty=oneline --abbrev-commit
+	
+	7.抓取分支
+		1).git pull提示no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream-to <branch-name> origin/<branch-name>。
+		2).在本地创建和远程分支对应的分支，使用git checkout -b branch-name origin/branch-name，本地和远程分支的名称最好一致；
+		3).建立本地分支和远程分支的关联，使用git branch --set-upstream branch-name origin/branch-name；
+		4).git fetch 抓取分支
+
+	8.撤回修改
+		清空全部已修改的问题件, 但是对于新建的文件和文件夹无法清空, 必须组合下面命令;
+			git checkout .
+			git clean -d
+		已经 add . 了, 用如下命令重置
+			git reset .
+
+	9.版本回退
+		git reset --hard commit_id
+		git log可以查看提交历史，以便确定要回退到哪个版本
+		git reflog查看命令历史，以便确定要回到未来的哪个版本
+
+		git push -f 强制推送到远程分支
+			本地分支回滚后，版本将落后远程分支，必须使用强制推送覆盖远程分支，否则无法推送到远程分支

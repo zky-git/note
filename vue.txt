@@ -1,0 +1,137 @@
+VUE问题解决
+
+	1.去掉路由#
+		添加路由模式 mode:'history';
+		
+	2.不能使用a链接
+		使用a链接会使页面重加载   应使用<router-link>;
+	
+	3.请求数据的两种方式
+		1) 使用vue-resource;
+		2) 使用axios;
+		
+	4.数据测试接口
+		http://jsonplaceholder.typicode.com/
+		数据测试app -->postMan
+	
+	5.书写默认的请求参数和请求头
+		EX：axios.defaults.headers.common['token'] = '58947589'
+		EX: axios.defaults.headers.post['Content-type'] = 'applicetion/json'
+	
+	6.翻译API
+		https://tech.yandex.com/  
+		https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20181120T071926Z.25ad021a9e61ea75.42e4d69596d91f2ef0728fd665044b005b49cb7f&lang=en&text=
+		
+	7.props问题
+		1)传值对象时可直接绑定v-bind=obj
+		EG:  post:{
+				id:1,
+				title:'今天下雨了'
+			}
+			//模板使用
+			<blog-post v-bind="post"></blog-post>
+			//等价于
+			<blog-post 
+				v-bind:id="post.id" 
+				v-bind:title="post.title"
+			></blog-post>
+
+		2)v-text 传递字符型数据
+
+		3)propE: {
+				type: Object,
+				// 对象或数组默认值必须从一个工厂函数获取
+				default: function () {
+					return { message: 'hello' }
+				}
+			},
+	
+	8.svg 转图标网址
+		https://icomoon.io/
+		
+	9.mock数据方式 添加本地数据接口
+		1) 打开build/webpack.dev.config.js 
+		2) 配置node express服务器
+			const express = require('express')
+			const app = express()
+		3) 引用数据
+			eg:  var goods = require('../data/goods.json')
+		4) 启用配置的服务器
+			在devServer配置中添加如下配置
+				before(app){  //传入配置APP 服务器
+					//设置接口
+					 app.get('/api/goods',(req,res)=>{
+						res.json(goods)
+					})
+					app.get('/api/ratings',(req,res)=>{
+						res.json(ratings)
+					})
+					app.get('/api/seller',(req,res)=>{
+						res.json(seller)
+					})
+
+				}
+		5) 重启vue
+	
+	10.CSS重置 网址
+		https://meyerweb.com/eric/tools/css/reset/index.html
+
+	11.项目中动态背景图可以用计算属性设置
+		computed:{
+			headPic(){
+				return Something.......
+			}
+		}
+	
+	12.vue给对象增加一个键值
+		1) 引进vue  import Vue from 'vue'
+		2) 使用Vue.set()函数赋值
+			Vue.set(this.food,"count",1)   
+			//第一个参数是赋值对象  第二个参数是键名  第三个键值
+
+	13.使用ref 查找对象
+		<div ref="foodScroll"></div>
+		let foodScroll = this.$ref.foodScroll
+
+	14.动画的使用
+		<transition name="fade"></transition>
+		6个class切换
+			.fade-enter-->.fade-enter-active-->.fade-enter-to-->.fade-leave-->.fade-leave-active-->.fade-leave-to
+
+		eg: .fade-enter-active , .fade-leave-active{
+				transition: opacity .5s;
+			}
+			.fade-enter , .fade-leave-to{
+				opacity: 0;
+			}
+	
+	15.子组件内部数据改变父组件数据
+		1)	JS中对象和数组时引用类型会造成：
+				如果prop是一个对象或数组时，在子组件内部改变它会影响父组件的状态
+
+	16.在父组件中调用子组件的函数方法
+		eg: 1) 在组件中注册showView()方法
+
+			2) 利用ref绑定子组件
+				<app-product-detail :food="selectFood" ref="foodView"></app-product-detail>
+				
+			2) 在父组件中注册函数调用子组件函数
+				this.$refs.foodView.showView()
+	
+	17.css样式问题
+		div没有具体的宽高填充空白区域可设置css如下：
+			eg:	position:absolute;
+				left:0;
+				top:0;
+				bottom:51px;
+				width:100%;
+				需要设置top和bottom的值
+
+	18.真机调试工具
+		网址:http://people.apache.org/~pmuellr/weinre/docs/1.x/1.5.0/Running.html
+		1) npm install -g weinre
+		2) 在首页引入<script src="http://a.b.c:8081/target/target-script-min.js"></script> 
+
+	19. 打包上线
+			1) config>index 目录下的productionSourceMap:false
+			2) npm run build  打包生产环境  
