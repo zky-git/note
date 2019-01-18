@@ -1,0 +1,351 @@
+组件生存周期
+    componentWillMount()    创建之前
+    componentDidMount()     创建之后
+    componentWillUpdate()   更新之前
+    componentDidUpdate()    更新之后
+    componentWillUnmount()  卸载之前
+    componentDidUnmount     卸载之后
+
+    componentWillReceiveProps()    组件参数更新
+    
+    Chrome  safari
+        document.body.scrollTop
+
+    firefox IE  
+        document.documentElement.scrollTop
+    
+    所有主流浏览器都支持都支持
+        pageXOffset 
+        pageYOffset 
+
+组件内
+    input 设置默认值时 不能使用value 应使用defaultValue
+    checkbox 设置选中时 使用defaultChecked
+    标签设置类名时 使用className
+
+------------------------------------------------------------->
+
+node_modules 包出现错误时
+    如果按照提示多次安装以后依然报错缺少包依赖
+        rm -rf *
+        cnpm install
+
+    如果出现instead 关键字 则有可能需要更新module
+        eg:
+            cnpm install extrat-text-webpack-plugin@next -D 
+
+------------------------------------------------------------->
+
+webpack
+    1.配置webpack
+        cnpm install -g webpack       #webpack本身的环境
+        cnpm install -g webpack-dev-server  小服务器
+
+    2 依赖
+        cnpm install babel-core -D  #babel后台编译器
+        cnpm install babel-preset-es2015 -D  #babel对ES2015的预设
+        cnpm install babel-loader -D    #babel加载器
+
+    3 #webpack 本身
+        cnpm install webpack -D             #webpack本地依赖库
+        cnpm install webpack-dev-server -D  #webpack服务器的本地依赖
+        cnpm install babel-preset-react -D  #babel-react预设
+
+    4 react
+        cnpm install react -D   #react本身
+        cnpm install react-dom -D   #react-dom本身
+        cnpm install react-hot-loader -D   #热更新
+
+    5 优化
+        cnpm install style-loader -D 
+        cnpm install css-loader -D 
+
+    webpack.config.js      #webpack的配置文件
+    .baberc                #babel预设文件
+
+------------------------------------------------------------->
+
+const path = require('path'); //node系统模块
+module.exports ={
+    entry:{
+        entry:'./src/index.js'
+    },
+    mode:'development',
+    output:{
+        path:path.resolve(__dirname,'dist'),
+        filename:'bundle.js'
+    },
+    //module.rules
+    module:{},
+    //插件
+    plugins:[],
+    //开发服务器
+    devServer:{}
+} 
+
+------------------------------------------------------------->
+
+配置文件可以修改 不一定是叫webpack.config.js 答: 不是
+    如果改名叫 : mmr.config.js
+    webpack --config mmr.config.js
+
+------------------------------------------------------------->
+
+scripts文件作用
+
+ "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config mmr.config.js",   ------> npm run build
+    "dev": "xxx",
+    "aaa": "ccc"
+  },
+
+------------------------------------------------------------->
+
+多入口文件
+    entry:{
+        entry:['./src/index.js','./src/index2.js']
+    },
+    
+自动生成html文件
+    引入html-webpack-pugin 插件  ---->依赖webpack   
+        需要在本地先安装webpack
+        npm install webpack -D 
+        npm install html-webpack-pugin -D 
+    
+生成多个html文件
+    需要多次new HtmlWebpackPlugin({})
+
+为每一个生成的html文件添加压缩的js文件
+    添加chunks: ['index'] 属性   
+
+    new HtmlWebpackPlugin({
+        minify:{
+            collapseWhitespace:true, //压缩空白
+            removeAttributeQuotes:true //删除属性双引号
+        },
+        chunks:['index2'],  // 添加入口文件是对应的文件名字
+        filename:'index2.html',
+        hash:true,
+        title:"I LOVE CHINA",
+        template:'./src/index2.html'
+    })
+
+------------------------------------------------------------->
+
+clean-webpack-plugin :删除something
+    1.下载
+        cnpm i clean-webpack-plugin -D 
+    2.引入
+        const CleanWebpackPlugin = require('clean-webpack-plugin')
+    3.使用
+        new CleanWebpackPlugin(['dist'])
+
+------------------------------------------------------------->
+
+devServer 热更新
+    1.安装
+        cnpm i webpack-dev-server -D
+    2.使用
+        devServer:{
+            contentBase:path.resolve(__dirname,'dist'),
+            host:"localhost",
+            post:"8000",
+            open:true  //自动打开页面
+            hot:true //热更新
+        }
+    3.启动
+        在package.json文件中添加
+            scripts:{
+                "dev":"webpack-dev-server"
+            }
+
+------------------------------------------------------------->
+
+热更新
+    1.引入webpack本身       ps: 热更新属于webpack本身的插件
+    2.配置    
+        devServer:{
+            contentBase:path.resolve(__dirname,'dist'),
+            host:"localhost",
+            post:"8000",
+            open:true  //自动打开页面
+            hot:true //热更新
+        }
+    3.配置插件
+        new webpack.HotModuleReplacementPlugin();
+
+------------------------------------------------------------->
+
+使用loader
+    eg:
+        1.安装 css-loader style-loader
+        2.使用
+            module:{
+                rules:[
+                    {
+                        test:/\.css$/,
+                        use:['css-loader','style-loader']
+                    }
+                ]
+            } 
+
+------------------------------------------------------------->
+
+图片的使用(png,jpg,gif)
+    1.安装
+        url-loader file-loader
+        cnpm install file-loader url-loader -D
+    2.使用
+        url-loader ------------>依赖于 file-loader
+        {
+            test:/\.(png|jpg|gif)$/,
+            use:[{
+                loader:'url-loader',
+                options:{   
+                    limit:50,     //可以将base64 转为路径格式
+                    outputPath:'images'  //将图片打包出去的一个目录
+                }
+            }] 
+        }
+
+------------------------------------------------------------->
+
+分离 css
+    extract-text-webpack-plugin
+
+    1.安装 
+        cnpm i extract-text-webpack-plugin -D 
+    2.使用
+        1)  const ExtractTextPlugin = require("extract-text-webpack-plugin"); //分离css 
+        2)  在module--->rules中设置
+            {
+                text:/\.css$/,
+                use:ExtractTextPlugin.extract({
+                    fallback:'style-loader',   //回滚
+                    use:"css-loader",
+                    publicPath:'../'       //解决css背景图 路径问题
+                })
+            }
+        3)  在插件中引用此插件
+            new ExtractTextPlugin('css/index')  //提取出来的css文件存放路径 默认在dist文件夹中
+        
+------------------------------------------------------------->
+
+使用sass
+    1.安装
+        cnpm i node-sass sass-loader -D
+    2.使用
+        {
+            test:/\.(scss|sass)/,
+            use:ExtractTextPlugin.extract({
+                fallback:'style-loader',
+                use:['css-loader','sass-loader'],
+                publicPath:'../'
+            })
+        }
+
+------------------------------------------------------------->
+
+使用postcss 预处理器  自动添加浏览器适配
+    1.安装
+        cnpm i postcss-loader autoprefixer -D 
+    2.使用
+        1) 先新建一个postcss.congig.js文件
+            module.exports = {
+                plugins:[
+                    require('autoprefixer')
+                ]
+            }
+
+------------------------------------------------------------->
+
+使用purifycss 消除冗余css
+    1.安装
+        cnpm i purifycss-webpack purify-css -D
+        cnpm i glob -D 
+    2.使用
+        const PurifyCssWebpack = require('purifycss-webpack');
+        const glob = require('glob);  //搜索全部
+
+        new  PurifyCssWebpack({
+            paths: glob.sync(path.join(__dirname,'src/*.html'))   //会寻找html里面引用的link.src
+        })
+
+------------------------------------------------------------->
+
+调试
+    webpack4.x 开启调试
+        --mode development
+
+    webpack3.x之前
+        sourceMap
+        devtool:'source-map'
+
+------------------------------------------------------------->
+
+babel
+    -babel用来编译js
+    -使用ESnext转化
+    -jsx
+    1.安装
+        cnpm i babel-loader babel-core babel-preset-env -D 
+        babel-preset-env  // js预设 --->运行环境
+
+    2.配置
+        {
+            test:/\.(js|jsx)$/,
+            use:['babel-loader'],
+            exclude:/node_modules/     //不包括node_modules文件
+        }
+
+------------------------------------------------------------->
+
+静态资源输出
+    1.安装
+        cnpm i copy-webpack-plugin -D 
+    2.使用
+        const CopyWebpackPlugin = require('copy-webpack-plugin');
+        plugins:[
+            new CopyWebpackPlugin([
+                {
+                    from:path.resolve(__dirname,'src/assets'),
+                    to:'./public'
+                }
+            ])
+        ]
+
+------------------------------------------------------------->
+
+使用第三方库
+    1.直接npm下载, 然后入口文件index.js引入 
+        cnpm i jquery -S;
+        import $ from 'jquery';
+
+    2.使用webpack 提供的全局接口
+        new webpack.ProvidePlugin({
+            $:'jquery'
+        })
+    
+    区别
+        import 方式  用不用都会打包
+
+------------------------------------------------------------->
+
+提取第三方文件
+    1)  entry:{
+            jquery:'jquery'
+        }
+    2)  optimization:{
+            splitChunks:{
+                cacheGroups:{
+                    vendor:{
+                        chunks:'initial',
+                        name:'jquery',
+                        enforce:true
+                    }
+                }
+            }
+        },
+        
+------------------------------------------------------------->
