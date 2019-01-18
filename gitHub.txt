@@ -11,7 +11,7 @@
 		demo.html   过滤该文件
 		
 	2.关联远程仓库 	
-		要关联一个远程库，使用命令git remote add origin git@BIGZKY:path/repo-name.git；
+		要关联一个远程库，使用命令git remote add origin git@github.com:BIGZKY/note.git；
 		关联后，使用命令git push -u origin master第一次推送master分支的所有内容；
 		此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
 	
@@ -26,7 +26,7 @@
 	
 	
 	4.创建SSH密钥
-		ssh-keygen -t rsa -C "your_email@example.com"
+		ssh-keygen -t rsa -C "git@github.com:BIGZKY/note.git"
 
 		$ ssh-keygen -t rsa -C "git@github.com:BIGZKY/note.git” -f ~/.ssh/github_rsa
 
@@ -36,7 +36,8 @@
 
 		添加私钥
 			ssh-add ~/.ssh/github_rsa
-			如果执行ssh-add时提示”Could not open a connection to your authentication agent”  可以先执行 ssh-agent bash  再运行 ssh-add ~/.ssh/github_rsa
+			如果执行ssh-add时提示”Could not open a connection to your authentication agent”  
+				可以先执行 ssh-agent bash  再运行 ssh-add ~/.ssh/github_rsa
 		 
 		 	ssh-add -l 来确私钥列表
 			ssh-add -D 来清空私钥列表
