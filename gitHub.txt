@@ -28,7 +28,7 @@
 	4.创建SSH密钥
 		ssh-keygen -t rsa -C "git@github.com:BIGZKY/note.git"
 
-		$ ssh-keygen -t rsa -C "git@github.com:BIGZKY/note.git” -f ~/.ssh/github_rsa
+		$ ssh-keygen -t rsa -C "git@github.com:BIGZKY/note.git” -f ~/.ssh/id_rsa
 
 		-t 指定密钥类型，默认是 rsa ，可以省略。
 		-C 设置注释文字，比如邮箱。
@@ -37,7 +37,7 @@
 		添加私钥
 			ssh-add ~/.ssh/github_rsa
 			如果执行ssh-add时提示”Could not open a connection to your authentication agent”  
-				可以先执行 ssh-agent bash  再运行 ssh-add ~/.ssh/github_rsa
+				可以先执行 ssh-agent bash  再运行 ssh-add ~/.ssh/id_rsa
 		 
 		 	ssh-add -l 来确私钥列表
 			ssh-add -D 来清空私钥列表
@@ -50,7 +50,7 @@
 				Port 22
 				HostName github.com
 				PreferredAuthentications publickey
-				IdentityFile C:/Users/xiaohaozi/.ssh/github-rsa
+				IdentityFile C:/Users/xiaohaozi/.ssh/id-rsa
 				User xiaohaozi
 
 			# 配置文件参数
