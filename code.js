@@ -1,14 +1,33 @@
 ﻿
 //--------------------------------------------------------------->
+//判断是否是移动运行环境
+var isMobilePlayer = 0;
+// 判断是否为移动端运行环境
+if (/AppleWebKit.*Mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))) {
+    if (window.location.href.indexOf("?mobile") < 0) {
+        try {
+            if (/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+                // 判断访问环境是 Android|webOS|iPhone|iPod|BlackBerry 则加载以下样式
+                isMobilePlayer = 1;
+            } else {
+                // 判断访问环境是 其他移动设备 则加载以下样式
+            }
+        } catch (e) {}
+    }
+} else {
+    // 如果以上都不是，则加载以下样式
+}
+
+//--------------------------------------------------------------->
 // 验证手机号
-		var check_mobile = /^1(3|5|6|7|8)\d{9}$/;
-          if (!check_mobile.test(data.address_mobile)) {
-              wx.showModal({
-                  title: '提示',
-                  content: '手机号格式不正确',
-              });
-              return;
-          }
+var check_mobile = /^1(3|5|6|7|8)\d{9}$/;
+if (!check_mobile.test(data.address_mobile)) {
+	wx.showModal({
+	  title: '提示',
+	  content: '手机号格式不正确',
+	});
+	return;
+}
 
 //--------------------------------------------------------------->
 //验证金额
