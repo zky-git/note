@@ -240,3 +240,41 @@ if (!check_mobile.test(data.address_mobile)) {
   //小程序添加单独路径
   var pages = getCurrentPages()
   var currentPage = pages[pages.length - 1].route
+  
+  
+  //设置60s倒计时
+var time = 60;
+var bool = false;
+$('.getCode').click(function(){
+	var _this = $(this);
+	if(bool){
+		return false; 
+	}else{
+		if(!$('input[name="phone"]').val()){
+			mui.toast('请输入手机号',{ duration:'short', type:'div' });
+			return false;
+		}
+		time = 60;
+	}
+	_this.removeClass('active');
+	bool = true;
+
+	_this.html(time+'s');
+	getVertifycode();
+	var timer = setInterval(function(){
+		time--;
+		if(time<=0){
+			time=0;
+			clearInterval(timer);
+			setTimeout(function(){
+				_this.addClass('active');
+				_this.html('重新获取');
+			},1000)
+			bool = false;
+			return false;
+		}
+
+		_this.html(time+'s');
+	},1000)
+
+})
