@@ -278,3 +278,6 @@ $('.getCode').click(function(){
 	},1000)
 
 })
+
+//mui中沉浸式header设置
+plus.navigator.setStatusBarBackground('#cc3333');
