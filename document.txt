@@ -1,0 +1,26 @@
+1、document.documentElement.scrollTop和document.body.scrollTop始终有一个为0，所以可以用这两个的和来求scrollTop
+
+2、scrollHeight、clientHeight 在DTD已声明的情况下用documentElement，未声明的情况下用body
+
+document.compatMode 可以用来判断是否声明了DTD， 值为"BackCompat"：未声明，值为"CSS1Compat"：已声明。
+
+
+window.onscroll  = function (){
+    var marginBot = 0;
+    if (document.compatMode === "CSS1Compat"){
+        marginBot = document.documentElement.scrollHeight - (document.documentElement.scrollTop+document.body.scrollTop)-  document.documentElement.clientHeight;
+    } else {
+        marginBot = document.body.scrollHeight - document.body.scrollTop-  document.body.clientHeight;
+    }
+    if(marginBot<=0) {
+        //do something        
+    }
+}
+
+
+document.compatMode用来判断当前浏览器采用的渲染方式。
+    BackCompat：标准兼容模式关闭。
+    CSS1Compat：标准兼容模式开启。
+当document.compatMode等于BackCompat时，浏览器客户区宽度是document.body.clientWidth；
+当document.compatMode等于CSS1Compat时，浏览器客户区宽度是document.documentElement.clientWidth。
+浏览器客户区高度、滚动条高度、滚动条的Left、滚动条的Top等等都是上面的情况.
